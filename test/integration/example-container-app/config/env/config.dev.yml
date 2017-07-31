@@ -1,0 +1,2 @@
+env:
+  FAKE_DATABASE_DATA: '{"6":{"id":"6","info":"data-item-6"}}'

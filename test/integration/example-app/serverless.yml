@@ -1,0 +1,23 @@
+plugins:
+  - serverless-offline
+
+service: "test"
+provider:
+  name: "aws"
+  runtime: "nodejs6.10"
+  environment:
+    EXAMPLE_ENV_VAR: "testy"
+
+functions:
+  simpleHandler:
+    handler: "application.simpleHandler"
+    events:
+      - http:
+          path: "simple"
+          method: "get"
+  jsonPromiseHandler:
+    handler: "application.jsonPromiseHandler"
+    events:
+      - http:
+          path: "json-promise"
+          method: "post"
