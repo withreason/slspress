@@ -6,17 +6,22 @@ const Application = require('../../index').Application;
 
 describe('Application', function() {
   describe('handlers', function () {
-    it('stores handlers for later retrieval', function () {
-      const handler = (event, context, callback) => callback({ mock: 'handler'});
+    it('stores handlers for later retrieval', done => {
+      const handler = (event, context, callback) => callback(null, { mock: 'handler'});
       const handlers = new Application()
         .withHandler('test-handler', handler)
         .getHandlers();
 
       expect(handlers).to.have.property('test-handler');
       let capturedResponse = null;
-      handlers['test-handler'](null, null, val => capturedResponse = val);
+      handlers['test-handler']({ httpMethod: 'GET' }, null, (err, val) => {
+        capturedResponse = val;
+      });
 
-      expect(capturedResponse).to.eql({ mock: 'handler'});
+      setTimeout(() => {
+        expect(capturedResponse).to.eql({ mock: 'handler'});
+        done();
+      });
     });
 
     it('throws an error if the same handler name is reused', function () {

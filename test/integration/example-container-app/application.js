@@ -20,7 +20,7 @@ module.exports = new boilerplate.Application(environment)
   .with(boilerplate.ParseJsonBodyMiddleware, boilerplate.SringifyResponseMiddleware)
   .with(boilerplate.DecodePathParamsMiddleware)
 
-  .with('container-handler', require('./handlers/example-container-handler'))
+  .with('container-handler', require('./middleware/example-container-middleware'), require('./handlers/example-container-handler'))
 
   .with('routing-handler', new boilerplate.RoutingHandlerBuilder()
     .withRoute('/routing/stuff/{id}', 'GET', require('./handlers/example-container-handler'))

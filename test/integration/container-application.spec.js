@@ -50,7 +50,28 @@ describe('ContainerApplication Integration', function() {
         .then(body => expect(body).to.eql(expectedResponseBody));
     });
 
-    it('returns a 404 with custom error response for an invalid id', function () {
+    it('returns a 404 with custom error response for an missing id', function () {
+      const options = {
+        method: 'GET',
+        uri: `${testUrl}/stuff/1`,
+        json: true,
+        headers: {
+          Authorization: 'superman'
+        },
+        resolveWithFullResponse: true,
+        simple: false
+      };
+
+      return request(options)
+        .then(res => {
+          expect(res.statusCode).to.equal(404);
+          expect(res.body).to.eql({ customErrorResponse: {
+            message: 'Could not find stuff with id 1'
+          }});
+        });
+    });
+
+    it('returns a 400 with custom error response for an invalid id format', function () {
       const options = {
         method: 'GET',
         uri: `${testUrl}/stuff/missing`,
@@ -64,9 +85,9 @@ describe('ContainerApplication Integration', function() {
 
       return request(options)
         .then(res => {
-          expect(res.statusCode).to.equal(404);
-          expect(JSON.parse(res.body)).to.eql({ customErrorResponse: {
-            message: 'Could not find stuff with id missing'
+          expect(res.statusCode).to.equal(400);
+          expect(res.body).to.eql({ customErrorResponse: {
+            message: 'Bad request'
           }});
         });
     });
@@ -107,7 +128,7 @@ describe('ContainerApplication Integration', function() {
       return request(options)
         .then(res => {
           expect(res.statusCode).to.equal(404);
-          expect(JSON.parse(res.body)).to.eql({ customErrorResponse: {
+          expect(res.body).to.eql({ customErrorResponse: {
             message: 'Could not find stuff with id missing'
           }});
         });
