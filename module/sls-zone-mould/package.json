@@ -1,0 +1,20 @@
+{
+  "name": "sls-zone-mould",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha 'test/**/*.spec.js'"
+  },
+  "author": "With Reason Ltd",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "chai": "^4.1.0",
+    "mocha": "^3.2.0",
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.4",
+    "sinon": "^2.4.0",
+    "sinon-chai": "^2.12.0",
+    "sls-zone-test-mould": "file:../sls-zone-test-mould"
+  }
+}
