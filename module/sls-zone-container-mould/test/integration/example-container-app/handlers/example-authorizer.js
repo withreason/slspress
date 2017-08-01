@@ -1,6 +1,6 @@
 'use strict';
 
-const createAuthorizerResponse = require('../../../../container-index').createAuthorizerResponse;
+const createAuthorizerResponse = require('../../../..').createAuthorizerResponse;
 
 module.exports = (event, context, callback) => {
   // very insecure if the authorization header is present we are authorized and our user id is the

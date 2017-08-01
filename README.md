@@ -1,3 +1,3 @@
-# abstract-container
+# Mould
 
-More information coming soon
+npm install && npm run bootstrap && npm test

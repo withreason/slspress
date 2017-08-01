@@ -9,15 +9,20 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "sls-zone-mould": "file:../sls-zone-mould"
+    "sls-zone-mould": "1.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.0",
     "mocha": "^3.2.0",
+    "object-merge": "^2.5.1",
+    "path": "^0.12.7",
+    "random-port": "^0.1.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
     "sinon": "^2.4.0",
     "sinon-chai": "^2.12.0",
-    "sls-zone-test-mould": "file:../sls-zone-test-mould"
+    "serverless": "^1.18.0",
+    "serverless-offline": "^3.15.1",
+    "sls-zone-test-mould": "1.0.0"
   }
 }

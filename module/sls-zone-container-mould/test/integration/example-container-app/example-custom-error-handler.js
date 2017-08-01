@@ -1,6 +1,6 @@
 'use strict';
 
-const SimpleErrorHandler = require('../../../container-index').SimpleErrorHandler;
+const SimpleErrorHandler = require('../../..').SimpleErrorHandler;
 
 class ExampleCustomErrorHandler extends SimpleErrorHandler {
 

@@ -1,10 +1,10 @@
 'use strict';
 
-const boilerplate = require('../../../../../container-index');
-const logger = boilerplate.logger(__filename);
-const NotFoundError = boilerplate.NotFoundError;
+const containerMould = require('../../../../..');
+const logger = containerMould.logger(__filename);
+const NotFoundError = containerMould.NotFoundError;
 
-class FakeDatabase extends boilerplate.Component {
+class FakeDatabase extends containerMould.Component {
   constructor(container) {
     super();
 

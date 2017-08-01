@@ -1,9 +1,9 @@
 'use strict';
 
-const boilerplate = require('../../../../container-index');
-const NotFoundError = boilerplate.NotFoundError;
+const containerMould = require('../../../..');
+const NotFoundError = containerMould.NotFoundError;
 
-class ExampleContainerHandler extends boilerplate.ContainerHandler {
+class ExampleContainerHandler extends containerMould.ContainerHandler {
 
   constructor(container) {
     super(container);

@@ -1,9 +1,9 @@
 'use strict';
 
-const boilerplate = require('../../../../container-index');
+const containerMould = require('../../../..');
 
-const ContainerRequestMiddleware = boilerplate.ContainerRequestMiddleware;
-const BadRequestError = boilerplate.BadRequestError;
+const ContainerRequestMiddleware = containerMould.ContainerRequestMiddleware;
+const BadRequestError = containerMould.BadRequestError;
 
 class ValidateIdParam extends ContainerRequestMiddleware {
 

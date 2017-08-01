@@ -3,5 +3,13 @@
   "version": "1.0.0",
   "author": "With Reason Ltd",
   "license": "UNLICENSED",
-  "private": true
+  "private": true,
+  "scripts": {
+    "bootstrap": "./node_modules/.bin/lerna bootstrap",
+    "clean": "rm -rf node_modules/ module/*/node_modules",
+    "test": "./node_modules/.bin/lerna run test"
+  },
+  "devDependencies": {
+    "lerna": "^2.0.0"
+  }
 }
