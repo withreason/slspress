@@ -1,0 +1,50 @@
+plugins:
+  - serverless-offline
+
+custom:
+  conf: ${file(./config/env/config-loader-${opt:stage, self:provider.stage}.js):config}
+
+service: "test"
+provider:
+  stage: 'dev'
+  name: "aws"
+  runtime: "nodejs6.10"
+  environment: ${self:custom.conf.env}
+
+functions:
+  authorizer:
+    handler: "application.authorizer"
+
+  simpleHandler:
+    handler: "application.simpleHandler"
+    events:
+      - http:
+          path: "simple"
+          method: "get"
+
+  jsonPromiseHandler:
+    handler: "application.jsonPromiseHandler"
+    events:
+      - http:
+          path: "json-promise"
+          method: "post"
+
+  stuff:
+    handler: "application.container-handler"
+    events:
+      - http:
+          path: "stuff/{id}"
+          method: "get"
+          authorizer:
+            name: "authorizer"
+            identitySource: "method.request.header.Authorization"
+
+  routing:
+    handler: "application.routing-handler"
+    events:
+      - http:
+          path: "routing/stuff/{id}"
+          method: "get"
+          authorizer:
+            name: "authorizer"
+            identitySource: "method.request.header.Authorization"

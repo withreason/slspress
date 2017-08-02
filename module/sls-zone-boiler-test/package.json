@@ -1,0 +1,15 @@
+{
+  "name": "sls-zone-boiler-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "With Reason Ltd",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "object-merge": "^2.5.1",
+    "path": "^0.12.7",
+    "random-port": "^0.1.0",
+    "serverless": "^1.18.0",
+    "serverless-offline": "^3.15.1"
+  }
+}
