@@ -9,6 +9,7 @@ const environment = {
 };
 
 describe('ContainerApplication Integration', function() {
+  this.timeout(1000 * 10);
 
   const offlineManager = new OfflineManager({ serverless: { servicePath: `${__dirname}/example-container-app` }});
 

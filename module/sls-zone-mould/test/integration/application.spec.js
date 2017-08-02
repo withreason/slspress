@@ -5,6 +5,7 @@ const OfflineManager = require('sls-zone-test-mould').ServerlessOfflineManager;
 const request = require('request-promise-native');
 
 describe('Application Integration', function() {
+  this.timeout(1000 * 10);
 
   const offlineManager = new OfflineManager({ serverless: { servicePath: `${__dirname}/example-app` }});
 

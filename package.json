@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "bootstrap": "./node_modules/.bin/lerna bootstrap",
+    "pretest": "./node_modules/.bin/lerna bootstrap",
     "clean": "rm -rf node_modules/ module/*/node_modules",
     "test": "./node_modules/.bin/lerna run test"
   },
