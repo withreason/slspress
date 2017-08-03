@@ -15,10 +15,17 @@ const buildPolicy = (event, userId, effect) => {
   return authResponse;
 };
 
+/**
+ * Create a simple authentication response for an authenticator
+ * @param authorized a boolean indicating whether the response should indicate the user is authenticated.
+ * @param userId the id of the authorized use if authorized.
+ * @param event The serverless event object
+ * @param callback the serverless callback object.
+ * @returns {*} the result of the serverless callback.
+ */
 module.exports = (authorized, userId, event, callback) => {
   if (!authorized) {
     return callback('Unauthorized');
   }
-  const policy = buildPolicy(event, userId, 'Allow');
-  callback(null, policy);
+  return callback(null, buildPolicy(event, userId, 'Allow'));
 };

@@ -22,13 +22,6 @@ functions:
           path: "simple"
           method: "get"
 
-  jsonPromiseHandler:
-    handler: "application.jsonPromiseHandler"
-    events:
-      - http:
-          path: "json-promise"
-          method: "post"
-
   stuff:
     handler: "application.container-handler"
     events:
@@ -43,7 +36,19 @@ functions:
     handler: "application.routing-handler"
     events:
       - http:
-          path: "routing/stuff/{id}"
+          path: "routing/examples"
+          method: "get"
+          authorizer:
+            name: "authorizer"
+            identitySource: "method.request.header.Authorization"
+      - http:
+          path: "routing/examples"
+          method: "post"
+          authorizer:
+            name: "authorizer"
+            identitySource: "method.request.header.Authorization"
+      - http:
+          path: "routing/missing"
           method: "get"
           authorizer:
             name: "authorizer"

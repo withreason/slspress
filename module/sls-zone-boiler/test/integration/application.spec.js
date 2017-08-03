@@ -8,7 +8,7 @@ const environment = {
   FAKE_DATABASE_DATA: '{"6":{"id":"6","info":"data-item-6"}}'
 };
 
-describe('ContainerApplication Integration', function() {
+describe('Application Integration', function() {
   this.timeout(1000 * 10);
 
   const offlineManager = new OfflineManager({ serverless: { servicePath: `${__dirname}/example-app` }});
@@ -20,39 +20,7 @@ describe('ContainerApplication Integration', function() {
   describe('simple handler', function () {
     it('returns a body', function () {
       return request(`${testUrl}/simple`)
-        .then(body => expect(body).to.equal('Simple handler response'));
-    });
-  });
-
-  describe('json response handler', function () {
-    it('returns a body', function () {
-      const options = {
-        method: 'POST',
-        uri: `${testUrl}/json-promise`,
-        body: {
-          testParam: 'test-1'
-        },
-        json: true
-      };
-
-      return request(options)
-        .then(body => expect(body).to.eql({ result: 'test-result-1' }));
-    });
-
-    it('returns a 404', function () {
-      const options = {
-        method: 'POST',
-        uri: `${testUrl}/json-promise`,
-        body: {
-          testParam: 'missing'
-        },
-        json: true,
-        resolveWithFullResponse: true,
-        simple: false
-      };
-
-      return request(options)
-        .then(res => expect(res.statusCode).to.equal(404));
+        .then(body => expect(body).to.equal('"Simple handler response"'));
     });
   });
 
@@ -92,7 +60,7 @@ describe('ContainerApplication Integration', function() {
         .then(body => expect(body).to.eql(expectedResponseBody));
     });
 
-    it('returns a 404 with custom error response for an missing id', function () {
+    it('returns a 404 with custom error response for a missing id', function () {
       const options = {
         method: 'GET',
         uri: `${testUrl}/stuff/1`,
@@ -136,15 +104,10 @@ describe('ContainerApplication Integration', function() {
   });
 
   describe('routing', function () {
-    it('when hitting handler returns a body for a valid id', function () {
-      const expectedResponseBody = {
-        id: '6',
-        info: 'data-item-6'
-      };
-
+    it('when hitting handler returns a body', function () {
       const options = {
         method: 'GET',
-        uri: `${testUrl}/routing/stuff/6`,
+        uri: `${testUrl}/routing/examples`,
         json: true,
         headers: {
           Authorization: 'superman'
@@ -152,13 +115,32 @@ describe('ContainerApplication Integration', function() {
       };
 
       return request(options)
-        .then(body => expect(body).to.eql(expectedResponseBody));
+        .then(body => expect(body).to.eql("Example get handler response"));
     });
 
-    it('when hitting handler returns a 404 with custom error response for an invalid id', function () {
+    it('when posting body returns body', function () {
       const options = {
-        method: 'GET',
-        uri: `${testUrl}/routing/stuff/missing`,
+        method: 'POST',
+        uri: `${testUrl}/routing/examples`,
+        json: true,
+        headers: {
+          Authorization: 'superman'
+        },
+        body: {
+          hello: 'example'
+        }
+      };
+
+      return request(options)
+        .then(body => expect(body).to.eql({
+          hello: 'example'
+        }));
+    });
+
+    it('when posting with no body returns bad request', function () {
+      const options = {
+        method: 'POST',
+        uri: `${testUrl}/routing/examples`,
         json: true,
         headers: {
           Authorization: 'superman'
@@ -168,18 +150,13 @@ describe('ContainerApplication Integration', function() {
       };
 
       return request(options)
-        .then(res => {
-          expect(res.statusCode).to.equal(404);
-          expect(res.body).to.eql({ customErrorResponse: {
-            message: 'Could not find stuff with id missing'
-          }});
-        });
+        .then(res => expect(res.statusCode).to.equal(400));
     });
 
     it('when missing handler returns a 404', function () {
       const options = {
         method: 'GET',
-        uri: `${testUrl}/routing/missing-route`,
+        uri: `${testUrl}/routing/missing`,
         json: true,
         headers: {
           Authorization: 'superman'

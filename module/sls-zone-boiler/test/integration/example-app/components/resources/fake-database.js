@@ -1,10 +1,9 @@
 'use strict';
 
-const boiler = require('../../../../..');
-const logger = boiler.logger(__filename);
-const NotFoundError = boiler.NotFoundError;
+const { Component, createLogger, NotFoundError} = require('../../../../..');
+const logger = createLogger(__filename);
 
-class FakeDatabase extends boiler.Component {
+class FakeDatabase extends Component {
   constructor(container) {
     super();
 

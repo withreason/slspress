@@ -1,5 +1,7 @@
 'use strict';
 
+const wrappers = require('../config/application-config-wrappers');
+
 function extractUser(event) {
   return event.requestContext && event.requestContext.authorizer && event.requestContext.authorizer.id;
 }
@@ -29,7 +31,7 @@ function stringifyHeaders(object) {
   return headers && JSON.stringify(headers);
 }
 
-module.exports = (event, objectContainingBody) => {
+function buildRequestLog(event, objectContainingBody) {
   const user = extractUser(event);
   const path = extractPath(event);
   const queryParams = extractQueryParams(event);
@@ -37,4 +39,22 @@ module.exports = (event, objectContainingBody) => {
   const body = stringifyBody(objectContainingBody);
 
   return `user=${user} path=${path} queryParams=${queryParams}\n  headers=${headers}\n  body=${body}\n`
-};
+}
+
+/**
+ * Returns middleware that ensures that each request and response is logged.
+ */
+module.exports = [
+  wrappers.requestMiddleware(function(req, res, next) {
+    this.logger.info(`START request. ${buildRequestLog(req.event, req.event)}`);
+    return next();
+  }),
+  wrappers.finallyMiddleware(function(req, res, next) {
+    if (res.error) {
+      this.logger.error(`ERROR processing request. error=${JSON.stringify(res.error)} status=${res.statusCode} ${buildRequestLog(req.event, res)}`);
+    } else {
+      this.logger.info(`COMPLETED request. status=${res.statusCode} ${buildRequestLog(req.event, res)}`);
+    }
+    return next();
+  })
+];

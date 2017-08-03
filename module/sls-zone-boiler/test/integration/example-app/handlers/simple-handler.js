@@ -1,7 +1,7 @@
 'use strict';
 
-const ResponseFactory = require('../../../..').ResponseFactory;
+const { rawHandler } = require('../../../..');
 
-module.exports = (event, context, callback) => {
-  return new ResponseFactory().ok('Simple handler response').send(callback);
-};
+module.exports = rawHandler(function(event, context, callback) {
+  return callback(null, { statusCode: 200, body: 'Simple handler response'});
+});

@@ -1,120 +1,75 @@
 'use strict';
 
-const FinallyMiddleware = require('./middleware/finally-middleware');
-const PromiseHandlerWrapper = require('./promise-handler-wrapper');
-const logger = require('./logger')(__filename);
+const createResponse = require('./response-factory');
+const createRequest = require('./request-factory');
+const loggerFactory = require('./logger-factory');
 
-function checkMiddlewareResult(middlewareResult) {
-  if (typeof middlewareResult === 'boolean') {
-    return Promise.resolve(middlewareResult);
-  }
-  if (!middlewareResult || !middlewareResult.then) {
-    throw new Error('Middleware must return a boolean or promise or a boolean that indicates whether to proceed')
-  }
-  return middlewareResult;
-}
+module.exports = function(errorHandler, thisContext, headers, customLogger) {
 
-class WrappedFinallyMiddleware extends FinallyMiddleware {
-  constructor(middleware) {
-    super();
-    this._middleware = middleware;
+  const logger = loggerFactory(__filename, customLogger);
 
-  }
-  process(error, response, event, context, callback) {
+  const catchFinallyMiddleware = (middleware) => function(req, res, next) {
     try {
-      return checkMiddlewareResult(this._middleware.process(error, response, event, context, callback))
-        .catch(err => logger.error('Finally middleware threw an error. Ignoring and proceeding with other finallys.', err))
-        .then(proceed => {
-          if (!proceed) {
-            logger.error('Finally middleware indicated the chain should not proceed. This behavior is not allowed. Ignoring and proceeding with other finallys.')
-          }
-          return Promise.resolve(true);
-        });
-    } catch(err) {
-      logger.error('Finally middleware threw an error. Ignoring and proceeding with other finallys.', err);
-      return Promise.resolve(true);
+      return middleware.call(this, req, res, next);
+    } catch (error) {
+      logger.error('Finally middleware threw an error. Ignoring and proceeding with other finallys.', error);
+      return next();
     }
-  }
-}
+  };
 
-class MiddlewareApplicator {
-  constructor(errorHandler, responseFactory, containerHolder) {
-    this._errorHandler = errorHandler;
-    this._promiseHandlerWrapper = new PromiseHandlerWrapper(responseFactory);
-    this._containerHolder = containerHolder;
-  }
+  const catchMiddleware = (middleware, finallyCallback) => function(req, res, next) {
+    try {
+      return middleware.call(this, req, res, next);
+    } catch (error) {
+      return forwardToErrorHandler(error, req, res, finallyCallback);
+    }
+  };
 
-  apply(handler, requestMiddleware, responseMiddleware, finallyMiddleware) {
-    const wrappedToHandlePromiseResult = this._promiseHandlerWrapper.wrapToHandlePromiseResult(handler);
+  const catchHandler = (handler, finallyCallback, req, res) => function(var_args) {
+    try {
+      return handler.apply(this, arguments);
+    } catch (error) {
+      return forwardToErrorHandler(error, req, res, finallyCallback);
+    }
+  };
 
-    return this._catchHandlerErrors(finallyMiddleware, (event, context, callback) => {
-      const responseMiddlewareWrappedCallback = (error, response) => {
-        if (error) {
-          callback(error, response);
-          return;
-        }
-        try {
-          this._processMiddleware(responseMiddleware, response, event, context, callback)
-            .then(proceed => proceed ? callback(error, response) : Promise.resolve(false))
-            .catch(err => this._errorHandler.handle(err, event, context, callback));
-        } catch (err) {
-          this._errorHandler.handle(err, event, context, callback);
-        }
-      };
+  const forwardToErrorHandler = (error, req, res, finallyCallback) => {
+    return errorHandler.call(thisContext, req, res._createErrorResponse(error, finallyCallback));
+  };
 
-      return this._processMiddleware(requestMiddleware, event, context, responseMiddlewareWrappedCallback)
-        .then(proceed => {
-          return proceed ? wrappedToHandlePromiseResult(event, context, responseMiddlewareWrappedCallback) : Promise.resolve(false)
-        });
-    });
-  }
+  const processMiddlewareChain = (chain, req, res, next) => {
+    const middleware = chain[0];
+    if (!middleware) {
+      return next();
+    }
+    return middleware.call(thisContext, req, res, () => processMiddlewareChain(chain.slice(1), req, res, next));
+  };
 
-  _catchHandlerErrors(finallyMiddleware, promiseHandler) {
+  this.apply = (extendedHandler, requestMiddleware, responseMiddleware, finallyMiddleware) => {
     return (event, context, callback) => {
-
-      // We always want to call all finally middleware so always proceed and catch any errors.
-      const wrappedFinallyMiddleware = finallyMiddleware.map(middleware => new WrappedFinallyMiddleware(middleware));
-
-      const finallyMiddlewareWrappedCallback = (error, response) => {
-        this._processMiddleware(wrappedFinallyMiddleware, error, response, event, context, callback)
-          .then(() => callback(error, response));
-      };
-
       try {
-        promiseHandler(event, context, finallyMiddlewareWrappedCallback)
-          .catch(err => this._errorHandler.handle(err, event, context, finallyMiddlewareWrappedCallback));
-      } catch(err) {
-        this._errorHandler.handle(err, event, context, finallyMiddlewareWrappedCallback);
+        const req = createRequest(event, context);
+
+        const wrappedFinallyMiddleware = finallyMiddleware.map(m => catchFinallyMiddleware(m));
+        const callbackWrappedInFinallyMiddleware = (err, res) =>
+          processMiddlewareChain(wrappedFinallyMiddleware, req, res, () => callback(err, res));
+
+        const wrappedResponseMiddleware = responseMiddleware.map(m => catchMiddleware(m, callbackWrappedInFinallyMiddleware));
+        const callbackWrappedInResponseMiddleware = (err, res) =>
+          processMiddlewareChain(wrappedResponseMiddleware, req, res, () => callbackWrappedInFinallyMiddleware(err, res));
+
+        const handleErrorFn = (error, req, res) => forwardToErrorHandler(error, req, res, callbackWrappedInFinallyMiddleware);
+        const res = createResponse(req, callbackWrappedInResponseMiddleware, handleErrorFn , headers);
+
+        const wrappedRequestMiddleware = requestMiddleware.map(m => catchMiddleware(m, callbackWrappedInFinallyMiddleware));
+        const wrappedExtendedHandler = catchHandler(extendedHandler, callbackWrappedInFinallyMiddleware, req, res);
+
+        return processMiddlewareChain(wrappedRequestMiddleware, req, res, () =>
+          wrappedExtendedHandler.call(thisContext, req.event, req.context, callbackWrappedInResponseMiddleware, req, res));
+      } catch (err) {
+        logger.error('Unexpected error while applying middleware.', err);
+        callback(err);
       }
-    }
-  }
-
-  /**
-   * @param {...*} var_args [0] - middleware array. [1..x] - middleware params. [length-1] - next callback
-   * @returns {Promise} result of middleware call.
-   * @private
-   */
-  _processMiddleware(var_args) {
-    const middleware = arguments[0];
-    const middlewareArgs = Array.prototype.slice.call(arguments, 1, arguments.length);
-
-    const nextMiddleware = middleware && middleware.length && middleware[0];
-    if (!nextMiddleware) {
-      return Promise.resolve(true);
-    }
-
-    return checkMiddlewareResult(this._executeSingleMiddleware(nextMiddleware, middlewareArgs))
-      .then(proceed => proceed ? this._processMiddleware.apply(this, [middleware.slice(1)].concat(middlewareArgs)) : Promise.resolve(false));
-  }
-
-  _executeSingleMiddleware(middleware, args) {
-    if (middleware.middlewareType !== 'container') {
-      return middleware.process.apply(middleware, args);
-    }
-    args = args.slice(0, args.length - 3); // strip off event, context, callback args
-    args = [this._containerHolder.container].concat(args); // add container as first arg.
-    return middleware.process.apply(middleware, args);
-  }
-}
-
-module.exports = MiddlewareApplicator;
+    };
+  };
+};

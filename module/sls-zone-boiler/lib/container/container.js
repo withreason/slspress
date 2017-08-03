@@ -1,6 +1,6 @@
 'use strict';
 
-const logger = require('../logger')(__filename);
+const createLogger = require('../logger-factory');
 
 /**
  * Container that manages the lifcycle of the components within it.
@@ -37,10 +37,10 @@ const logger = require('../logger')(__filename);
  */
 class Container {
 
-  constructor(params) {
-    this._config = this._buildConfig(params);
+  constructor(customLogger) {
     this._store  = {};
     this._registry = {};
+    this._logger = createLogger(__filename, customLogger);
   }
 
   /**
@@ -50,8 +50,7 @@ class Container {
    * @return {Object} the component param
    */
   register(key, component) {
-    this._log(`Registering new component ${key}`);
-    this._log(JSON.stringify({ key: key, value: typeof component}, null, '\t'));
+    this._logger.trace(`[Container] Registering new component ${key}=${typeof component}`);
 
     if (this._store[key] !== undefined) {
       throw new Error(`Duplicate declaration of ${key} found`);
@@ -69,10 +68,10 @@ class Container {
   fetch(key) {
     const value = this._store[key];
 
-    this._log(`fetching ${key}`);
+    this._logger.trace(`[Container] fetching ${key}`);
 
     if (value) {
-      this._log(`found component for ${key}`);
+      this._logger.trace(`[Container] found component for ${key}`);
 
       if (!this._registry[key]) {
         //start component
@@ -86,7 +85,7 @@ class Container {
       }
       return this._registry[key];
     }
-    this._log(`could not find component for ${key}`);
+    this._logger.error(`[Container] could not find component for ${key}`);
     throw new Error(`Could not find ${key}`);
   }
 
@@ -108,25 +107,11 @@ class Container {
         return Promise.resolve();
       });
       return Promise.all(teardown).then(() => {
-        this._log('Flushing container - stopping the app was a success');
+        this._logger.trace('[Container] Flushing container - stopping the app was a success');
         this._store   = {};
         this._registry = [];
       });
     });
-  }
-
-  _buildConfig(params) {
-    let opts      = (params || {});
-    const object  = {};
-    object.debug  = opts.debug || false;
-    object.logger = opts.logger || console;
-    return object;
-  }
-
-  _log(text) {
-    if (this._config.debug) {
-      return logger.trace("[Container] " + text);
-    }
   }
 }
 

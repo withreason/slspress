@@ -1,25 +1,13 @@
 'use strict';
 
-const boiler = require('../../../..');
-const NotFoundError = boiler.NotFoundError;
+const { NotFoundError } = require('../../../..');
 
-class ExampleContainerHandler extends boiler.ContainerHandler {
-
-  constructor(container) {
-    super(container);
-    this._fakeDatabase = container.fetch('components/resources/fake-database');
+module.exports = function(req, res) {
+  if (!req.event.pathParameters.id) {
+    throw new NotFoundError('id');
   }
-
-  validate() {
-    if (!this._event.pathParameters.id) {
-      return Promise.reject(new NotFoundError('id'));
-    }
-    return Promise.resolve();
-  }
-
-  process() {
-    return this._fakeDatabase.find(this._event.pathParameters.id);
-  }
-}
-
-module.exports = ExampleContainerHandler;
+  return this.component('components/resources/fake-database')
+    .find(req.event.pathParameters.id)
+    .then(res.send.bind(res))
+    .catch(res.handleError.bind(res));
+};
