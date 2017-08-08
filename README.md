@@ -1,9 +1,7 @@
 # slspress - part of sls-zone
-A library for rapidly developing Serverless applications inspired by express. 
+A lightweight unopinionated library for rapidly developing Serverless applications inspired by express. 
 
-Frustrated by some of the serverless gotchas? Wondering where middleware, error handling and lifecycle msuccessfuls? or 
-just not sure where to start with serverless? Look no further. This library looks to address these points whilst
-maintaining a very small footprint.
+An AWS Lambda targeted library to provide light-weight boiler plate to manage middleware, error handling and API lifecycle in a simple and accessible way. Much of the functionality is inspired by the popular ExpressJS framework, but with some clear differences required when developing in a serverless environment.
 
 ## Objectives
 * To enable developers to rapidly create serverless applications by providing a recommended approach and set of 
