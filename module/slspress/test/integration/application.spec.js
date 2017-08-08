@@ -1,7 +1,7 @@
 'use strict';
 
 const expect = require('chai').expect;
-const OfflineManager = require('sls-zone-boiler-test').ServerlessOfflineManager;
+const OfflineManager = require('slspress-test').ServerlessOfflineManager;
 const request = require('request-promise-native');
 
 const environment = {

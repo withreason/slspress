@@ -1,9 +1,8 @@
 {
-  "name": "sls-zone-boiler-parent",
+  "name": "slspress-parent",
   "version": "1.1.0",
   "author": "With Reason Ltd",
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "MIT",
   "scripts": {
     "pretest": "./node_modules/.bin/lerna bootstrap",
     "clean": "rm -rf node_modules/ module/*/node_modules",
@@ -11,5 +10,6 @@
   },
   "devDependencies": {
     "lerna": "^2.0.0"
-  }
+  },
+  "engines" : { "node" : ">=6.0.0" }
 }
