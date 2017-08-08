@@ -46,7 +46,7 @@ defined there.
 
 #### Hello World
 
-The below module would export the 'hello' handler that could be referenced from a serverless.yml
+The below module would export the 'hello' handler that could be referenced from a serverless.yml.
 
 ```javascript
 const app = require('slspress').create();
@@ -109,7 +109,7 @@ module.exports = app.export();
 ```
 
 #### Defining a custom error handler
-This following provides a custom error handler
+This following provides a custom error handler. Will be called on any error caught within the function handler.
 
 ```javascript
 const app = require('slspress').create();
