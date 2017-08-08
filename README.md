@@ -63,7 +63,7 @@ Middlewhere allows for workflow injections at different parts of the function li
 Note: you may modify your `req` and `res` object within the middlewhere, or prevent further execution of the function lifecycle.
 
 ### Components
-Components assist with dependancy management and resource pooling. As lambda functions have unclear lifespans, and caotic reuse of single lambda's, `components` provide a logical location to manage DB connection, and resources you may wish to build up and tear down on each lambda function execution. Any component added will be available via the `this.compnent` within all middlewhere, and funciton handlers. slspress will process the opening and closing of the component without duplication if called in multiple locations or instances. Please see the components examples below.
+Components assist with lifecycle management and dependency injection. As lambda functions have unclear lifespans, and caotic reuse of single lambda's, `components` provide a logical location to manage DB connections, or resources you may wish to build up and tear down on each lambda function execution. Any component added will be available via the `this.component` within all middlewhere, and funciton handlers. slspress will process the opening and closing of the component without duplication if called in multiple locations or instances. Please see the components examples below.
 
 ---
 
