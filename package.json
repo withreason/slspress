@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "author": "With Reason Ltd",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "pretest": "./node_modules/.bin/lerna bootstrap",
     "clean": "rm -rf node_modules/ module/*/node_modules",
@@ -11,5 +12,10 @@
   "devDependencies": {
     "lerna": "^2.0.0"
   },
-  "engines" : { "node" : ">=6.0.0" }
+  "engines": { "node": ">=6.0.0" },
+  "bugs": "https://github.com/withreason/slspress/issues",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/withreason/slspress.git"
+  }
 }

@@ -79,12 +79,30 @@ defined there.
 
 #### Hello World
 
-The below module would export the 'hello' handler that could be referenced from a serverless.yml.
+The below module would export the 'hello' handler that can be referenced from the below serverless.yml.
 
+application.js:
 ```javascript
 const app = require('slspress').create();
 app.on('hello').use((req, res) => res.ok('Hello!'));
 module.exports = app.export();
+```
+
+serverless.yml:
+```yaml
+service: "test"
+provider:
+  stage: 'dev'
+  name: "aws"
+  runtime: "nodejs6.10"
+
+functions:
+  hello:
+    handler: "application.hello"
+    events:
+      - http:
+          path: "hello"
+          method: "get"
 ```
 
 #### Routing and functions

@@ -1,12 +1,28 @@
 {
   "name": "slspress",
+  "description": "A library for rapidly developing Serverless applications inspired by express",
   "version": "1.1.0",
   "main": "index.js",
+  "keywords": [
+    "serverless",
+    "framework",
+    "middleware",
+    "container",
+    "web",
+    "api",
+    "express"
+  ],
+  "author": "With Reason Ltd",
+  "license": "MIT",
+  "engines": { "node": ">=6.0.0" },
+  "bugs": "https://github.com/withreason/slspress/issues",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/withreason/slspress.git"
+  },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha 'test/**/*.spec.js'"
   },
-  "author": "With Reason Ltd",
-  "license": "MIT",
   "devDependencies": {
     "chai": "^4.1.0",
     "mocha": "^3.2.0",
@@ -20,6 +36,5 @@
     "serverless": "^1.18.0",
     "serverless-offline": "^3.15.1",
     "slspress-test": "1.1.0"
-  },
-  "engines" : { "node" : ">=6.0.0" }
+  }
 }
