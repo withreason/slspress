@@ -156,13 +156,13 @@ module.exports = app.export();
 This shows an example of how to add response and finally middleware at both the global and function scope. 
 
 ```javascript
-const {create, responseMiddleware, finallyMiddleware } = require('slspress');
+const {create, response, final } = require('slspress');
 const app = create();
 
-app.middleware(responseMiddleware(require('some-response-middleware')));
-app.middleware(finallyMiddleware(require('some-finally-middleware')));
+app.middleware(response(require('some-response-middleware')));
+app.middleware(final(require('some-finally-middleware')));
 
-app.middleware(responseMiddleware((req, res, next) => {
+app.middleware(response((req, res, next) => {
   // add some extra headers for a successful response
   res.headers({'all-good': 'yes'});
   return next();
@@ -172,8 +172,8 @@ app.on('function-with-global-middleware').use((req, res) => res.ok('Hello!'));
 
 app.on('function-with-extra-middleware')
   .middleware(
-    finallyMiddleware('extra-finally-middleware'),
-    responseMiddleware(require('extra-response-middleware')))
+    final('extra-finally-middleware'),
+    response(require('extra-response-middleware')))
   .use((req, res) => res.ok('Hello!')
 );
 

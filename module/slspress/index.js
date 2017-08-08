@@ -14,7 +14,7 @@ module.exports.BadRequestError = require('./lib/error/bad-request-error');
 module.exports.NotFoundError = require('./lib/error/not-found-error');
 module.exports.UnprocessableEntityError = require('./lib/error/unprocessable-entity-error');
 
-module.exports.createAuthorizerResponse = require('./lib/authorizer/create-authorizer-resonse');
+module.exports.createAuthorizerResponse = require('./lib/authorizer/create-authorizer-response');
 module.exports.createLogger = require('./lib/logger-factory');
 
 module.exports.jsonMiddleware = require('./lib/middleware/json');

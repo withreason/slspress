@@ -45,11 +45,11 @@ function buildRequestLog(event, objectContainingBody) {
  * Returns middleware that ensures that each request and response is logged.
  */
 module.exports = [
-  wrappers.requestMiddleware(function(req, res, next) {
+  wrappers.request(function(req, res, next) {
     this.logger.info(`START request. ${buildRequestLog(req.event, req.event)}`);
     return next();
   }),
-  wrappers.finallyMiddleware(function(req, res, next) {
+  wrappers.final(function(req, res, next) {
     if (res.error) {
       this.logger.error(`ERROR processing request. error=${JSON.stringify(res.error)} status=${res.statusCode} ${buildRequestLog(req.event, res)}`);
     } else {

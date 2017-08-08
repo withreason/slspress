@@ -44,23 +44,22 @@ module.exports.override = function(var_args) {
   return { override: true, value: Array.from(arguments) };
 };
 
-module.exports.requestMiddleware = function(var_args) {
+module.exports.request = function(var_args) {
   return wrapMiddleware('request', arguments);
 };
 
-module.exports.responseMiddleware = function(var_args) {
+module.exports.response = function(var_args) {
   return wrapMiddleware('response', arguments);
 };
 
-module.exports.finallyMiddleware = function(var_args) {
-  return wrapMiddleware('response', arguments);
+module.exports.final = function(var_args) {
+  return wrapMiddleware('finally', arguments);
 };
-
 
 const cancelAllMiddleware = [
-  module.exports.requestMiddleware((req, res, next) => next()),
-  module.exports.responseMiddleware((req, res, next) => next()),
-  module.exports.finallyMiddleware((req, res, next) => next())
+  module.exports.request((req, res, next) => next()),
+  module.exports.response((req, res, next) => next()),
+  module.exports.final((req, res, next) => next())
 ];
 
 module.exports.handler = function(var_args) {

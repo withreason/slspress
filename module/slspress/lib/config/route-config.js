@@ -58,7 +58,7 @@ class RouteConfig {
     }
     const middlewares = flattenArrays(args)
     // if the middleware type is not given assume request.
-      .map(middleware => middleware.middlewareType ? middleware : configWrappers.requestMiddleware(middleware));
+      .map(middleware => middleware.middlewareType ? middleware : configWrappers.request(middleware));
 
     this._add(handlerName, 'middlewares', override, middlewares);
   }
