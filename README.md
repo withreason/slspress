@@ -3,9 +3,11 @@ A lightweight unopinionated library for rapidly developing Serverless applicatio
 
 An AWS Lambda targeted library to provide light-weight boiler plate to manage middleware, error handling and API lifecycle in a simple and accessible way. Much of the functionality is inspired by the popular ExpressJS framework, but with some clear differences required when developing in a serverless environment.
 
+Note: This library does not create the routes in API Gateway, it's purpose is to provide a framework for the handler code only. You will still need to create API Gateway routes and funcitons via the Serverless framework or other method.
+
 ## Objectives
-* To enable developers to rapidly create serverless applications by providing a recommended approach and set of 
-useful boilerplate code.
+* To enable developers to rapidly create serverless applications by providing a recommended approach and set of useful boilerplate code.
+* To keep flexability in application and architectural design within Lambda handlers.
 * To be as small and lightweight as possible with very few dependencies and overhead.
 
 ## Features
@@ -38,6 +40,30 @@ request is made . You want your code to be a lean as possible to minimise the im
 There are a few simple examples of usage below however they assume that you have a working knowledge of serverless.
 A more extensive tutorial will be coming soon to the sls-zone website.
 
+## Concepts
+
+### On Handler
+`On` handler specifies which lambda to attach to. After the `.on(...)` statment, any middle where or routes will be attached to that lambda only.
+
+### Routing
+slspress provies provisions for all the standard route types. The default route is `.use(...)` which is a raw forward handler for the lambda specified, but the below list is also allowed for convenience:
+* `app.on('lambda').get('/users',...)`
+* `app.on('lambda').post('/users',...)`
+* `app.on('lambda').put('/users/{id}',...)`
+* `app.on('lambda').delete('/users/{id}',...)`
+* `app.on('lambda').patch('/users/{id}',...)`
+
+### Middlewhere
+Middlewhere allows for workflow injections at different parts of the function life-cycle similar to the expressJS framework. There are three types of middlewhere:
+* __request__ - called before your function handler is processed.
+* __response__ - called after your function handler is processed, and before your response is returned, only if no exceptions are thrown.
+* __finally__ - called at the end of you function lifecycle regardless of exceptions.
+
+Note: you may modify your `.req` and `.res` object within the middlewhere, or prevent further execution of the function lifecycle.
+
+### Components
+Components assist with dependancy management and resource pooling. As lambda functions have unclear lifespans, and caotic reuse of single lambda's, `components` provide a logical location to manage DB connection, and resources you may wish to build up and tear down on each lambda function execution. Any component added will be available via the `this.compnent` within all middlewhere, and funciton handlers. slspress will process the opening and closing of the component without duplication if called in multiple locations or instances. Please see the components examples below.
+
 ###Examples
 An slspress handler file is designed to look very much like an express application. You create your app, you define 
 some common middleware, potentially provide your own error handler and then list the handlers that you want to export.
@@ -51,6 +77,27 @@ The below module would export the 'hello' handler that could be referenced from 
 ```javascript
 const app = require('slspress').create();
 app.on('hello').use((req, res) => res.ok('Hello!'));
+module.exports = app.export();
+```
+
+#### Routing and functions
+This example shows a multiple handlers with different routes or functions. providing you the flexability to easily create nano-services, micro-services, or monaliths.
+
+```javascript
+const { create } = require('slspress');
+const app = create();
+
+app.on('existing-name')
+  .post('/my-rest-endpoint', require('create-handler'))
+  .get('/my-rest-endpoint/{id}', require('show-handler'))
+  .patch('/my-rest-endpoint/{id}', require('update-handler'))
+  .delete('/my-rest-endpoint/{id}', require('delete-handler'))
+  
+app.on('separate-function')
+  .get('/another-rest-endpoint', require('/separate-function/handler'})
+  
+app.on('schedule-task').use(require('/scheduled-task/handler')
+
 module.exports = app.export();
 ```
 
@@ -182,23 +229,6 @@ const app = create();
 
 app.on('existing-name')
   .use(rawHandler(require('existing-serverless-handler')));
-
-module.exports = app.export();
-```
-
-#### Routing multiple events through a single function
-This example shows a single handler function that deals with all of
-a rest endpoints actions.
-
-```javascript
-const { create } = require('slspress');
-const app = create();
-
-app.on('existing-name')
-  .post('/my-rest-endpoint', require('create-handler'))
-  .get('/my-rest-endpoint/{id}', require('show-handler'))
-  .patch('/my-rest-endpoint/{id}', require('update-handler'))
-  .delete('/my-rest-endpoint/{id}', require('delete-handler'))
 
 module.exports = app.export();
 ```
