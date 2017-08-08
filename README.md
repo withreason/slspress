@@ -6,6 +6,8 @@ An AWS Lambda targeted library to provide light-weight boiler plate to manage mi
 
 Note: This library does not create the routes in API Gateway, it's purpose is to provide a framework for the handler code only. You will still need to create API Gateway routes and funcitons via the Serverless framework or other method.
 
+---
+
 ## Objectives
 * To enable developers to rapidly create serverless applications by providing a recommended approach and set of useful boilerplate code.
 * To keep flexability in application and architectural design within Lambda handlers.
@@ -37,9 +39,7 @@ Granted you could probably write adapters but that takes time.
 serverless it can make a big difference. Executors are started and stopped on demand by the provider when a http 
 request is made . You want your code to be a lean as possible to minimise the impact of "cold starts". 
 
-## Getting started
-There are a few simple examples of usage below however they assume that you have a working knowledge of serverless.
-A more extensive tutorial will be coming soon to the sls-zone website.
+---
 
 ## Concepts
 
@@ -65,7 +65,13 @@ Note: you may modify your `.req` and `.res` object within the middlewhere, or pr
 ### Components
 Components assist with dependancy management and resource pooling. As lambda functions have unclear lifespans, and caotic reuse of single lambda's, `components` provide a logical location to manage DB connection, and resources you may wish to build up and tear down on each lambda function execution. Any component added will be available via the `this.compnent` within all middlewhere, and funciton handlers. slspress will process the opening and closing of the component without duplication if called in multiple locations or instances. Please see the components examples below.
 
-###Examples
+---
+
+## Getting started
+There are a few simple examples of usage below however they assume that you have a working knowledge of serverless.
+A more extensive tutorial will be coming soon to the [sls.zone](http://sls.zone) website.
+
+### Examples
 An slspress handler file is designed to look very much like an express application. You create your app, you define 
 some common middleware, potentially provide your own error handler and then list the handlers that you want to export.
 Its worth noting that slspress does not interact with the serverless.yml file at all so routes still need to be 
@@ -281,16 +287,4 @@ app.on('hello').use(function(req, res) {
 
 module.exports = app.export();
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
+---
