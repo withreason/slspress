@@ -48,11 +48,11 @@ request is made . You want your code to be a lean as possible to minimise the im
 
 ### Routing
 slspress provies provisions for all the standard route types. The default route is `.use(...)` which is a raw forward handler for the lambda specified, but the below list is also allowed for convenience:
-* `app.on('lambda').get('/users',...)`
-* `app.on('lambda').post('/users',...)`
-* `app.on('lambda').put('/users/{id}',...)`
-* `app.on('lambda').delete('/users/{id}',...)`
-* `app.on('lambda').patch('/users/{id}',...)`
+- `app.on('lambda').get('/users',...)`
+- `app.on('lambda').post('/users',...)`
+- `app.on('lambda').put('/users/{id}',...)`
+- `app.on('lambda').delete('/users/{id}',...)`
+- `app.on('lambda').patch('/users/{id}',...)`
 
 ### Middlewhere
 Middlewhere allows for workflow injections at different parts of the function life-cycle similar to the expressJS framework. There are three types of middlewhere:
@@ -60,7 +60,7 @@ Middlewhere allows for workflow injections at different parts of the function li
 * __response__ - called after your function handler is processed, and before your response is returned, only if no exceptions are thrown.
 * __finally__ - called at the end of you function lifecycle regardless of exceptions.
 
-Note: you may modify your `.req` and `.res` object within the middlewhere, or prevent further execution of the function lifecycle.
+Note: you may modify your `req` and `res` object within the middlewhere, or prevent further execution of the function lifecycle.
 
 ### Components
 Components assist with dependancy management and resource pooling. As lambda functions have unclear lifespans, and caotic reuse of single lambda's, `components` provide a logical location to manage DB connection, and resources you may wish to build up and tear down on each lambda function execution. Any component added will be available via the `this.compnent` within all middlewhere, and funciton handlers. slspress will process the opening and closing of the component without duplication if called in multiple locations or instances. Please see the components examples below.
@@ -288,3 +288,5 @@ app.on('hello').use(function(req, res) {
 module.exports = app.export();
 ```
 ---
+
+Any suggestions or recommendations - please get in touch with the development team at [Reason](http://www.withreason.co.uk)
