@@ -7,7 +7,8 @@
   "scripts": {
     "pretest": "./node_modules/.bin/lerna bootstrap",
     "clean": "rm -rf node_modules/ module/*/node_modules",
-    "test": "./node_modules/.bin/lerna run test"
+    "test": "./node_modules/.bin/lerna run test",
+    "publish": "if [[ $(npm whoami) == 'withreason_npm' ]]; then ./node_modules/.bin/lerna publish; else echo 'Please log in as withreason_npm to publish'; fi"
   },
   "devDependencies": {
     "lerna": "^2.0.0"
