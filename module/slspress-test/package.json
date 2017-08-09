@@ -1,7 +1,7 @@
 {
   "name": "slspress-test",
   "description": "A library for rapidly developing Serverless applications inspired by express",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "main": "index.js",
   "keywords": [
     "serverless",
@@ -17,10 +17,12 @@
     "serverless": "^1.18.0",
     "serverless-offline": "^3.15.1"
   },
-  "engines": { "node": ">=6.0.0" },
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "bugs": "https://github.com/withreason/slspress/issues",
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/withreason/slspress.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/withreason/slspress.git"
   }
 }
