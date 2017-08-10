@@ -8,6 +8,7 @@
     "pretest": "./node_modules/.bin/lerna bootstrap",
     "clean": "rm -rf node_modules/ module/*/node_modules",
     "test": "./node_modules/.bin/lerna run test",
+    "coverage": "./node_modules/.bin/lerna run coverage",
     "publish": "if [[ $(npm whoami) == 'withreason_npm' ]]; then cp README.md module/slspress/; ./node_modules/.bin/lerna publish; else echo 'Please log in as withreason_npm to publish'; fi"
   },
   "devDependencies": {
