@@ -4,7 +4,7 @@ const Component = require('../container/component');
 
 const flattenArrays = require('../flatten-arrays');
 const validateHeadersObject = require('../validate-headers-object');
-const configWrappers = require('./application-config-wrappers');
+const configWrappers = require('./route-config-wrappers');
 
 const fs = require('fs');
 const createLogger = require('../logger-factory');
@@ -53,7 +53,7 @@ class RouteConfig {
 
   middleware(var_args) {
     const { handlerName, override, args } = this._processArgsForOverride(arguments);
-    if (args.length === 0) {
+    if (!override && args.length === 0) {
       throw new Error('middleware must be given at least one argument');
     }
     const middlewares = flattenArrays(args)
@@ -70,9 +70,6 @@ class RouteConfig {
     }
     if (typeof args[0] !== 'string') {
       throw new Error('The first argument to component must be a string, the name of the component.');
-    }
-    if (typeof args[1] !== 'object' && !Component.isPrototypeOf(args[1])) {
-      throw new Error('The second argument to component must be a subclass of Component or an object');
     }
     this._add(handlerName, 'component', false, { name: args[0], componentClass: args[1], additionalArguments: args.slice(2)});
   }
@@ -113,13 +110,15 @@ class RouteConfig {
     const moduleName = filename.replace(/\.([^.]+)$/, '');
     const module = require(`${directory}/${moduleName}`);
     if (!Component.isPrototypeOf(module)) {
-      this._logger.trace(`Skipping module that is not an Component ${filename}`);
+      this._logger.trace(`Skipping module that is not a Component ${filename}`);
       return;
     }
+    this._logger.trace(`Registering component from ${filename} with name ${moduleName}`);
     this.component.apply(this, [handlerName, `${namespace}/${moduleName}`, module].concat(additionalArgs));
   }
 
   _registerComponentsInDir(handlerName, namespace, directory, recursive, additionalArgs) {
+    this._logger.trace(`Loading components from ${directory} into namespace ${namespace}`);
     const ls = fs.readdirSync(directory);
     ls.filter(file => file.endsWith('.js')).forEach((file) => {
       this._registerComponentFile(handlerName, namespace, directory, file, additionalArgs);

@@ -2,3 +2,5 @@
 node_modules/
 .idea
 module/slspress/README.md
+module/slspress/.nyc_output
+module/slspress/coverage

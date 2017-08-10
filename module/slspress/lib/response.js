@@ -162,7 +162,7 @@ module.exports = function(req, callback, errorHandlingFn, headers, statusCode, b
     return new (Object.getPrototypeOf(this).constructor)(req, finallyCallback, errorHandlingFn, _headers, _statusCode, _body, error);
   };
 
-  this._updateFromRawHandlerResponse = (error, rawResponse) => {
+  this._createFromRawHandlerResponse = (error, rawResponse) => {
     const newResponse = new (Object.getPrototypeOf(this).constructor)(req, callback, errorHandlingFn,
       rawResponse && rawResponse.headers || _headers,
       rawResponse && rawResponse.statusCode || _statusCode,

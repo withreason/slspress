@@ -116,12 +116,12 @@ app.on('existing-name')
   .post('/my-rest-endpoint', require('create-handler'))
   .get('/my-rest-endpoint/{id}', require('show-handler'))
   .patch('/my-rest-endpoint/{id}', require('update-handler'))
-  .delete('/my-rest-endpoint/{id}', require('delete-handler'))
+  .delete('/my-rest-endpoint/{id}', require('delete-handler'));
   
 app.on('separate-function')
-  .get('/another-rest-endpoint', require('/separate-function/handler'})
+  .get('/another-rest-endpoint', require('/separate-function/handler'));
   
-app.on('schedule-task').use(require('/scheduled-task/handler')
+app.on('schedule-task').use(require('/scheduled-task/handler'));
 
 module.exports = app.export();
 ```

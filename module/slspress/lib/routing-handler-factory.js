@@ -18,7 +18,7 @@ module.exports.source = {
 
 module.exports.create = (applicationConfig, handlerName, customLogger) => {
 
-  function creteRoutedHandler(routeKey, routeConfig) {
+  function createRoutedHandler(routeKey, routeConfig) {
     const headers = applicationConfig.find(handlerName, 'headers', routeConfig._config).reduce((result, headers) => Object.assign(result, headers), {});
     const errorHandler = applicationConfig.find(handlerName, 'onError', routeConfig._config)[0] || simpleErrorHandler;
     const middlewares = flattenArrays(applicationConfig.find(handlerName, 'middlewares', routeConfig._config));
@@ -40,11 +40,12 @@ module.exports.create = (applicationConfig, handlerName, customLogger) => {
     const extendedHandler = (event, context, callback, req, res) => {
       switch (routeConfig._type) {
         case 'raw':
-          const convertCallback =  (error, resposnse) => callback(error, res._updateFromRawHandlerResponse(error, resposnse));
+          const convertCallback =  (error, response) => callback(error, res._createFromRawHandlerResponse(error, response));
           return routeConfig._handlerFunction.call(thisContext, event, context, convertCallback);
         case 'auth':
           return routeConfig._handlerFunction.call(thisContext, event, context, callback);
         case 'reqres':
+        case 'cron':
           return routeConfig._handlerFunction.call(thisContext, req, res);
         default:
           throw new Error(`Unrecognised handler type ${routeConfig._type}`);
@@ -58,7 +59,7 @@ module.exports.create = (applicationConfig, handlerName, customLogger) => {
   const routeHandlerByKey = {};
   applicationConfig.find(handlerName, 'route').forEach(({ source, path, method, routeConfig }) => {
     const routeKey = `${source}.${path}.${method}`;
-    routeHandlerByKey[routeKey] = creteRoutedHandler(routeKey, routeConfig);
+    routeHandlerByKey[routeKey] = createRoutedHandler(routeKey, routeConfig);
   });
 
   const logger = loggerFactory(__filename, customLogger);

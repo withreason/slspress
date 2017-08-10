@@ -1,6 +1,6 @@
 'use strict';
 
-const wrappers = require('../config/application-config-wrappers');
+const wrappers = require('../config/route-config-wrappers');
 
 function extractUser(event) {
   return event.requestContext && event.requestContext.authorizer && event.requestContext.authorizer.id;

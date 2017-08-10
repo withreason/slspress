@@ -1,5 +1,6 @@
 'use strict';
 
+module.exports = Object.assign(module.exports, require('./lib/config/route-config-wrappers'));
 module.exports = Object.assign(module.exports, require('./lib/config/application-config-wrappers'));
 module.exports.create = () => new (require('./lib/app'));
 

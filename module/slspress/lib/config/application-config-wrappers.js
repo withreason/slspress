@@ -2,33 +2,7 @@
 
 const RouteHandlerConfig = require('./route-handler-config');
 
-const flattenArrays = require('../flatten-arrays');
-
-function wrapMiddleware(type, callerArguments) {
-  if (callerArguments.length === 0) {
-    throw new Error(`${type}Middleware must have at least one argument`);
-  }
-  const middlewares = flattenArrays(callerArguments);
-  middlewares.forEach(middleware => {
-    if (middleware.override) {
-      if (Array.isArray(middleware.value)) {
-        return middleware.value.forEach(middleware => {
-          if (typeof middleware !== 'function') {
-            throw new Error('middleware must be a function or override wrapped function');
-          }
-        })
-      }
-      if (typeof middleware.value !== 'function') {
-        throw new Error('middleware must be a function or override wrapped function');
-      }
-      return;
-    }
-    if (typeof middleware !== 'function') {
-      throw new Error('middleware must be a function or override wrapped function');
-    }
-  });
-  return { middlewareType: type, value: middlewares };
-}
+const routeWrappers = require('./route-config-wrappers');
 
 function wrapHandler(type, callerArguments) {
   if (callerArguments.length !== 1) {
@@ -37,43 +11,38 @@ function wrapHandler(type, callerArguments) {
   return new RouteHandlerConfig(type, callerArguments[0]);
 }
 
-module.exports.override = function(var_args) {
-  if (arguments.length === 0) {
-    throw new Error('override must have at least one argument');
-  }
-  return { override: true, value: Array.from(arguments) };
-};
-
-module.exports.request = function(var_args) {
-  return wrapMiddleware('request', arguments);
-};
-
-module.exports.response = function(var_args) {
-  return wrapMiddleware('response', arguments);
-};
-
-module.exports.final = function(var_args) {
-  return wrapMiddleware('finally', arguments);
-};
-
-const cancelAllMiddleware = [
-  module.exports.request((req, res, next) => next()),
-  module.exports.response((req, res, next) => next()),
-  module.exports.final((req, res, next) => next())
-];
-
+/**
+ * Indicates the given handler function is a regular type of handler that takes two args (req, res).
+ * @param var_args the handler.
+ * @returns {*} config for the outer function.
+ */
 module.exports.handler = function(var_args) {
   return wrapHandler('reqres', arguments);
 };
 
+/**
+ * Indicates the given handler function is a raw type of handler that takes three args (event, context, callback).
+ * @param var_args the handler.
+ * @returns {*} config for the outer function.
+ */
 module.exports.rawHandler = function(var_args) {
   return wrapHandler('raw', arguments);
 };
 
+/**
+ * Indicates the given handler function is a authorizer. No middleware will applied to the handler by default.
+ * @param var_args the authorizer.
+ * @returns {*} config for the outer function.
+ */
 module.exports.authorizerHandler = function(var_args) {
-  return wrapHandler('auth', arguments).middleware(module.exports.override(cancelAllMiddleware));
+  return wrapHandler('auth', arguments).middleware(routeWrappers.override());
 };
 
+/**
+ * Indicates the given handler function is a cron function. No middleware will applied to the handler by default.
+ * @param var_args the cron handler.
+ * @returns {*} config for the outer function.
+ */
 module.exports.cronHandler = function(var_args) {
-  return wrapHandler('reqres', arguments).middleware(module.exports.override(cancelAllMiddleware));
+  return wrapHandler('cron', arguments).middleware(routeWrappers.override());
 };

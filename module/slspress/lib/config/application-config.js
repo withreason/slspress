@@ -14,7 +14,7 @@ function getHandlerWrapper(source) {
   return HANDLER_WRAPPERS_BY_SOURCE[source] || DEFAULT_HANDLER_WRAPPER;
 }
 
-class ApplicationConfig extends RouteConfig{
+class ApplicationConfig extends RouteConfig {
   constructor(customLogger) {
     super(customLogger);
   }
@@ -39,7 +39,7 @@ class ApplicationConfig extends RouteConfig{
   }
 
   httpRoute(var_args) {
-    const { handlerName, args } = this._processArgsForNoOverride('use', arguments);
+    const { handlerName, args } = this._processArgsForNoOverride('httpRoute', arguments);
     if (args.length !== 3) { // yes 3 vs 2. Its correct... ;) We add a extra method param where they are defined on the handler
       throw new Error('expected two arguments, the path and the handler');
     }
@@ -49,6 +49,10 @@ class ApplicationConfig extends RouteConfig{
     if (typeof path !== 'string') {
       throw new Error('The first argument must be a string, the path to apply the handler to.');
     }
+    if (handler instanceof RouteHandlerConfig && handler._type !== 'reqres' && handler._type !== 'raw') {
+      throw new Error('Only regular or raw handlers are allowed in http routes');
+    }
+
     this._route(handlerName, routingHandlerFactory.source.http, path, method, handler);
   }
 

@@ -50,11 +50,15 @@ module.exports = function(errorHandler, thisContext, headers, customLogger) {
       try {
         const req = createRequest(event, context);
 
-        const wrappedFinallyMiddleware = finallyMiddleware.map(m => catchFinallyMiddleware(m));
+        const wrappedFinallyMiddleware = finallyMiddleware
+          .map(m => catchFinallyMiddleware(m))
+          .reverse();
         const callbackWrappedInFinallyMiddleware = (err, res) =>
           processMiddlewareChain(wrappedFinallyMiddleware, req, res, () => callback(err, res));
 
-        const wrappedResponseMiddleware = responseMiddleware.map(m => catchMiddleware(m, callbackWrappedInFinallyMiddleware));
+        const wrappedResponseMiddleware = responseMiddleware
+          .map(m => catchMiddleware(m, callbackWrappedInFinallyMiddleware))
+          .reverse();
         const callbackWrappedInResponseMiddleware = (err, res) =>
           processMiddlewareChain(wrappedResponseMiddleware, req, res, () => callbackWrappedInFinallyMiddleware(err, res));
 

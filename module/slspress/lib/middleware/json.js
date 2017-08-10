@@ -1,6 +1,6 @@
 'use strict';
 
-const wrappers = require('../config/application-config-wrappers');
+const wrappers = require('../config/route-config-wrappers');
 
 /**
  * Returns middleware that ensures that request and response bodies are decoded / encoded to JSON
