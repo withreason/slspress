@@ -146,6 +146,17 @@ describe('Response', () => {
   });
 
   describe('internal function', () => {
+    it('_toPlain should return a plain response object', () => {
+      subject.addHeaders({ some: 'header'}).send(200, { body: 'test'});
+
+      const plain = subject._toPlain();
+      expect(plain).to.eql({
+        body: { body: 'test'},
+        headers: { some: 'header'},
+        statusCode: 200
+      });
+    });
+
     it('_createErrorResponse should clone response but with new callback and error object', () => {
       subject.addHeaders({ some: 'header'}).send(200, { body: 'test'});
 

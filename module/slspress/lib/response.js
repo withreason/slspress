@@ -158,6 +158,14 @@ module.exports = function(req, callback, errorHandlingFn, headers, statusCode, b
    */
   this.handleError = error => errorHandlingFn(error, req, this);
 
+  this._toPlain = function() {
+    return {
+      body: this.body,
+      statusCode: this.statusCode,
+      headers: this.headers
+    };
+  };
+
   this._createErrorResponse = (error, finallyCallback) => {
     return new (Object.getPrototypeOf(this).constructor)(req, finallyCallback, errorHandlingFn, _headers, _statusCode, _body, error);
   };

@@ -54,7 +54,7 @@ module.exports = function(errorHandler, thisContext, headers, customLogger) {
           .map(m => catchFinallyMiddleware(m))
           .reverse();
         const callbackWrappedInFinallyMiddleware = (err, res) =>
-          processMiddlewareChain(wrappedFinallyMiddleware, req, res, () => callback(err, res));
+          processMiddlewareChain(wrappedFinallyMiddleware, req, res, () => callback(err, res && res._toPlain ? res._toPlain() : res));
 
         const wrappedResponseMiddleware = responseMiddleware
           .map(m => catchMiddleware(m, callbackWrappedInFinallyMiddleware))
