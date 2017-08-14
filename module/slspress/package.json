@@ -1,7 +1,7 @@
 {
   "name": "slspress",
   "description": "A library for rapidly developing Serverless applications inspired by express",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "main": "index.js",
   "keywords": [
     "serverless",
