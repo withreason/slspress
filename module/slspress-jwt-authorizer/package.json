@@ -7,8 +7,10 @@
     "test": "./node_modules/.bin/nyc --reporter=html --reporter=text --all ./node_modules/mocha/bin/mocha 'test/**/*.spec.js'"
   },
   "author": "With Reason Ltd",
-  "license": "UNLICENCED",
-  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "dependencies": {
     "jsonwebtoken": "^7.4.2",
     "slspress": "^2.0.5"

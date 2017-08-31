@@ -4,6 +4,8 @@
   "description": "Middleware that aborts requests from the warm up plugin.",
   "main": "index.js",
   "author": "With Reason Ltd",
-  "license": "UNLICENCED",
-  "private": true
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0"
+  }
 }
