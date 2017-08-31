@@ -1,6 +1,8 @@
 *.log
 node_modules/
 .idea
+coverage
+.nyc_output
 module/slspress/README.md
 module/slspress/.nyc_output
-module/slspress/coverage
+

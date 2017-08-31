@@ -1,0 +1,9 @@
+{
+  "name": "slspress-warm",
+  "version": "1.0.0",
+  "description": "Middleware that aborts requests from the warm up plugin.",
+  "main": "index.js",
+  "author": "With Reason Ltd",
+  "license": "UNLICENCED",
+  "private": true
+}
