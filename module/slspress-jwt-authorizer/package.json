@@ -1,6 +1,6 @@
 {
   "name": "slspress-jwt-authorizer",
-  "version": "1.0.0",
+  "version": "2.0.6",
   "description": "JWT authorizer for use with slspress",
   "main": "index.js",
   "scripts": {

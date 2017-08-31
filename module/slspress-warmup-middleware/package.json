@@ -1,6 +1,6 @@
 {
-  "name": "slspress-warm",
-  "version": "1.0.0",
+  "name": "slspress-warmup-middleware",
+  "version": "2.0.6",
   "description": "Middleware that aborts requests from the warm up plugin.",
   "main": "index.js",
   "author": "With Reason Ltd",
