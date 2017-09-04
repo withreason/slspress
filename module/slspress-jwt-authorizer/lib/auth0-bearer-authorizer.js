@@ -13,6 +13,10 @@ const logger = createLogger(__filename);
 module.exports = (publicKey) => (event, context, callback) => {
   try {
     const encryptedToken = event.authorizationToken && event.authorizationToken.replace(/Bearer /, '');
+    if (!encryptedToken) {
+      logger && logger.info(`No auth token found on request. event=${JSON.stringify(event)}`);
+      return callback('Unauthorized');
+    }
     const token = jwt.verify(encryptedToken, publicKey, { algorithms: ['RS256']});
     if (token) {
       logger && logger.trace(`Allowing access for ${token.sub} to ${event.path}`);
