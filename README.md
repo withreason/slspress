@@ -305,6 +305,17 @@ app.on('hello').use(function(req, res) {
 
 module.exports = app.export();
 ```
+
+Alternatively the handler can be a plain arrow function and use req.app instead of this.
+```javascript
+
+app.on('hello').use((req, res) => {
+  req.app.component('component/resource/db').find('stuff')
+  .then(data => res.send(data))
+  .catch(e => res.handleError(e))
+});
+```
+
 ---
 
 Any suggestions or recommendations - please get in touch with the development team at [Reason](http://www.withreason.co.uk)

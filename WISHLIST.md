@@ -2,7 +2,6 @@
 
 * Add more response shortcut methods for other http status codes.
 * Add more error exception types and to the simple error handler.
-* Add the "this" context to request object as req.app. - Will allow the use of arrow functions when using components.
 * Add trace logging through out the project.
 * Log a warning message if request chain does not callback in a specific time and indicate where it went wrong.
 * Auto detect handler type based on the number of arguments the function has.
