@@ -59,6 +59,7 @@ describe('MiddlewareApplicator', () => {
   });
 
   function validateReqRes(req, res, statusCode) {
+    expect(req.app).to.eql(thisContext);
     expect(req.event).to.eql(event);
     expect(req.context).to.eql(context);
     expect(res.headers).to.eql(headers);
@@ -118,7 +119,7 @@ describe('MiddlewareApplicator', () => {
       handler(event, context, callback);
       expect(middlewareCalls).to.eql(['middleware1', 'throwingMiddleware']);
       expect(errorHandler).to.have.been.calledOnce;
-      expect(errorHandler.getCall(0).args[0]).to.eql({ event, context});
+      expect(errorHandler.getCall(0).args[0]).to.eql({ app: thisContext, event, context});
       expect(errorHandler.getCall(0).args[1].error).to.eql(middlewareError);
     });
 
@@ -150,7 +151,7 @@ describe('MiddlewareApplicator', () => {
       handler(event, context, callback);
       expect(middlewareCalls).to.eql(['handler','middleware2', 'throwingMiddleware']);
       expect(errorHandler).to.have.been.calledOnce;
-      expect(errorHandler.getCall(0).args[0]).to.eql({ event, context});
+      expect(errorHandler.getCall(0).args[0]).to.eql({ app: thisContext, event, context});
       expect(errorHandler.getCall(0).args[1].error).to.eql(middlewareError);
     });
 

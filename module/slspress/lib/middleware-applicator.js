@@ -48,7 +48,7 @@ module.exports = function(errorHandler, thisContext, headers, customLogger) {
   this.apply = (extendedHandler, requestMiddleware, responseMiddleware, finallyMiddleware) => {
     return (event, context, callback) => {
       try {
-        const req = createRequest(event, context);
+        const req = createRequest(event, context, thisContext);
 
         const wrappedFinallyMiddleware = finallyMiddleware
           .map(m => catchFinallyMiddleware(m))
