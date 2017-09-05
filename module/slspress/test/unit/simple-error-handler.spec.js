@@ -9,6 +9,7 @@ const ApplicationError = require('../../lib/error/application-error');
 const BadRequestError = require('../../lib/error/bad-request-error');
 const NotFoundError = require('../../lib/error/not-found-error');
 const UnprocessableEntityError = require('../../lib/error/unprocessable-entity-error');
+const ForbiddenError = require('../../lib/error/forbidden-error');
 const subject = require('../../lib/simple-error-handler');
 
 describe('SimpleErrorHandler', () => {
@@ -22,7 +23,8 @@ describe('SimpleErrorHandler', () => {
       badRequest: sinon.spy(),
       notFound: sinon.spy(),
       unprocessableEntity: sinon.spy(),
-      internalServerError: sinon.spy()
+      internalServerError: sinon.spy(),
+      forbidden: sinon.spy()
     };
   });
 
@@ -103,6 +105,14 @@ describe('SimpleErrorHandler', () => {
       subject.call(thisContext, fakeRequest, stubResponse);
 
       expect(stubResponse.unprocessableEntity).to.have.been.calledOnce;
+    });
+
+    it('403 for forbidden error type', () => {
+      stubResponse.error = new ForbiddenError();
+
+      subject.call(thisContext, fakeRequest, stubResponse);
+
+      expect(stubResponse.forbidden).to.have.been.calledOnce;
     });
   });
 

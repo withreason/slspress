@@ -3,6 +3,7 @@
 const ApplicationError = require('./error/application-error');
 const NotFoundError = require('./error/not-found-error');
 const BadRequestError = require('./error/bad-request-error');
+const ForbiddenError = require('./error/forbidden-error');
 const UnprocessableEntityError = require('./error/unprocessable-entity-error');
 
 function printError (logger, error) {
@@ -24,6 +25,10 @@ module.exports = function(req, res) {
 
   if (res.error instanceof BadRequestError) {
     return res.badRequest();
+  }
+
+  if (res.error instanceof ForbiddenError) {
+    return res.forbidden();
   }
 
   if (res.error instanceof NotFoundError) {
