@@ -1,6 +1,6 @@
 {
   "name": "slspress-config-loader",
-  "version": "2.0.6",
+  "version": "2.2.0",
   "description": "Loads config files",
   "main": "index.js",
   "author": "With Reason Ltd",
