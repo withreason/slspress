@@ -30,7 +30,7 @@ module.exports = (directory, stage) => {
     const secretConfig = yaml.safeLoad(fs.readFileSync(secretFileName, 'utf8'));
     config = objectMerge(config, secretConfig)
   }
-  const prefix = `${ENV_OVERRIDE_PREFIX}_${stage.toUpperCase()}`;
+  const prefix = `${ENV_OVERRIDE_PREFIX}${stage.toUpperCase()}`;
 
   Object.keys(process.env)
     .filter(key => key.startsWith(prefix))
