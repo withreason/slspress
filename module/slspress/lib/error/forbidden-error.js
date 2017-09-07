@@ -3,8 +3,8 @@
 const ApplicationError = require('./application-error');
 
 class ForbiddenError extends ApplicationError {
-  constructor() {
-    super('Access is forbidden');
+  constructor(message) {
+    super(message || 'Access is forbidden');
   }
 }
 module.exports = ForbiddenError;

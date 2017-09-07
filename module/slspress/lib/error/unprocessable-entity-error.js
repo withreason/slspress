@@ -3,8 +3,8 @@
 const ApplicationError = require('./application-error');
 
 class UnprocessableEntityError extends ApplicationError {
-  constructor() {
-    super('Unprocessable Entity');
+  constructor(message) {
+    super(message || 'Unprocessable Entity');
   }
 }
 module.exports = UnprocessableEntityError;
