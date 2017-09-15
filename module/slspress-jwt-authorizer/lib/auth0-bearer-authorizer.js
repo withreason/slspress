@@ -19,11 +19,11 @@ module.exports = (publicKey) => (event, context, callback) => {
     }
     const token = jwt.verify(encryptedToken, publicKey, { algorithms: ['RS256']});
     if (token) {
-      logger && logger.trace(`Allowing access for ${token.sub} to ${event.path}`);
+      logger && logger.trace(`Allowing access for ${token.sub} to ${event.methodArn}`);
     } else {
       logger && logger.warn(`Unauthorized user. event=${JSON.stringify(event)}`);
     }
-    return createAuthorizerResponse(token, token && token.sub, event, callback);
+    return createAuthorizerResponse(token, token && token.sub, event, callback, { allowFullApiAccess: true });
   } catch (e) {
     logger && logger.warn(e, e.stack, {
       message: 'Error while validating jwt token',
