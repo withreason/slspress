@@ -15,10 +15,14 @@ function extractQueryParams(event) {
 }
 
 function stringifyBody(object) {
-  let body =  object && object.body &&
-    JSON.stringify((typeof object.body === 'string' ? JSON.parse(object.body) : object.body));
-  if (body && body.length > 500) {
-    body = body.substring(0, 500) + '...';
+  let body = object && object.body;
+  if (body) {
+    try {
+      body = JSON.stringify((typeof object.body === 'string' ? JSON.parse(object.body) : object.body));
+    } catch (e) {}
+    if (body && typeof body === 'string' && body.length > 500) {
+      body = body.substring(0, 500) + '...';
+    }
   }
   return body;
 }
