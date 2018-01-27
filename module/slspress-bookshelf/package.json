@@ -1,0 +1,28 @@
+{
+  "name": "slspress-bookshelf",
+  "version": "2.2.3",
+  "description": "Bookshelf component for slspress",
+  "main": "index.js",
+  "author": "With Reason Ltd",
+  "license": "UNLICENCED",
+  "private": true,
+  "scripts": {
+    "test": "node -e 'require(`nyc/bin/nyc`)' noscript --reporter=html --reporter=text --all node -e 'require(`mocha/bin/mocha`)' noscript 'test/**/*.spec.js'"
+  },
+  "dependencies": {
+    "slspress": "^2.2.3",
+    "bookshelf": "0.10.3",
+    "bookshelf-json-columns": "^2.1.1",
+    "bookshelf-modelbase": "^2.10.4",
+    "bookshelf-modelbase-plus": "^2.2.2",
+    "knex": "^0.13.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.5.0",
+    "nyc": "^11.1.0",
+    "sinon": "^3.2.0",
+    "sinon-chai": "^2.13.0"
+  }
+}
