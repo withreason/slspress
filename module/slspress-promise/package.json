@@ -1,0 +1,23 @@
+{
+  "name": "slspress-promise",
+  "version": "2.2.3",
+  "description": "Handler and middleware that wraps up the error handling and sending of a response from a promise",
+  "main": "index.js",
+  "author": "With Reason Ltd",
+  "license": "UNLICENCED",
+  "private": true,
+  "scripts": {
+    "test": "node -e 'require(`nyc/bin/nyc`)' noscript --reporter=html --reporter=text --all node -e 'require(`mocha/bin/mocha`)' noscript 'test/**/*.spec.js'"
+  },
+  "dependencies": {
+    "slspress": "^2.2.3"
+  },
+  "devDependencies": {
+    "chai": "^4.1.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.5.0",
+    "nyc": "^11.1.0",
+    "sinon": "^3.2.0",
+    "sinon-chai": "^2.13.0"
+  }
+}
