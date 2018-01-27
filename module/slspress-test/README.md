@@ -38,4 +38,71 @@ You can pass properties to serverless offline by adding a constructor argument. 
 you wish to test is not in the working directory you could do something like this `new OfflineManager({ serverless: { servicePath: __dirname + '/your-app' }})`.
 
 
+## jwtRequest
 
+This function allows easier testing of endpoints protected by the slspress-jwt-authorizer module
+
+You call the function with a base url and private key and it will return an object that you can call 
+get, post, patch and del on. All of the methods take a identityObject property that is encrypted with 
+the private key on each request.
+
+Example usage:
+
+```javascript
+const { jwtRequest } = require('slspress-test');
+
+const somePrivateKey = '';// load this from some props of something.
+const testUrl = 'http://localhost:3000';// load this from some props of something.
+
+const request = jwtRequest(testUrl, somePrivateKey);
+
+it('returns a list of users', () => {
+  return request.get({
+    identityObject: { sub: 'user1' },
+    uri: `/users`
+  }).then(body => {
+    // some assertions
+  });
+});
+
+it('create a user', () => {
+  return request.post({
+    identityObject: { sub: 'user1' },
+    uri: `/users`,
+    body: { some: 'user object' },
+    expectedStatusCode: 201 // if not given validates 2xx
+  }).then(body => {
+    // some assertions
+  });
+});
+
+it('update a user', () => {
+  return request.patch({
+    identityObject: { sub: 'user1' },
+    uri: `/users/some-id`,
+    body: { some: 'user object' },
+  }).then(body => {
+    // some assertions
+  });
+});
+
+it('replace a user', () => {
+  return request.put({
+    identityObject: { sub: 'user1' },
+    uri: `/users/some-id`,
+    body: { some: 'user object' },
+  }).then(body => {
+    // some assertions
+  });
+});
+
+it('delete a user', () => {
+  return request.del({
+    identityObject: { sub: 'user1' },
+    uri: `/users/some-id`
+  }).then(body => {
+    // some assertions
+  });
+});
+
+```
