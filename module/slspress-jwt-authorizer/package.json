@@ -1,6 +1,6 @@
 {
   "name": "slspress-jwt-authorizer",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "JWT authorizer for use with slspress",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "node": ">=6.0.0"
   },
   "dependencies": {
-    "jsonwebtoken": "^7.4.2",
+    "jsonwebtoken": "8.3.0",
     "slspress": "^2.2.3"
   },
   "devDependencies": {
